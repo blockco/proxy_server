@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rpassafa <rpassafa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/07 21:22:11 by rpassafa          #+#    #+#             */
+/*   Updated: 2017/05/07 21:22:12 by rpassafa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -19,5 +31,4 @@ int	main(void)
 	write(sockfd, "ping", 5);
 	read(sockfd, recvline, 1024);
 	printf("%s", recvline);
-	// write(1, recvline, 1024);
 }

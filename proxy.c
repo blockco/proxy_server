@@ -1,30 +1,37 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   proxy.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rpassafa <rpassafa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/07 21:22:07 by rpassafa          #+#    #+#             */
+/*   Updated: 2017/05/07 21:25:08 by rpassafa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "proxy.h"
 
 void	server(int fd)
 {
-	struct addrinfo main, *reserve;
-	int sockfd;
-	char buf[1024];
-	int byte_count;
-	char *header;
+	t_sock main_socket;
 
-	header = strdup("GET /index.html HTTP/1.1\r\nHost: www.qst0.com\r\n\r\n");
-	memset(&main, 0,sizeof(main));
-	main.ai_family=AF_UNSPEC;
-	main.ai_socktype = SOCK_STREAM;
-	getaddrinfo("www.qst0.com","80", &main, &reserve);
-	sockfd = socket(reserve->ai_family,reserve->ai_socktype,reserve->ai_protocol);
-	connect(sockfd,reserve->ai_addr,reserve->ai_addrlen);
-	send(sockfd,header,strlen(header),0);
-	byte_count = recv(sockfd,buf, sizeof(buf) - 1,0);
-	buf[byte_count] = 0;
-	write(fd, buf, strlen(buf));
-	printf("%s",buf);
+	main_socket.header =
+	strdup("GET /index.html HTTP/1.1\r\nHost: www.qst0.com\r\n\r\n");
+	memset(&main_socket.main, 0, sizeof(main_socket.main));
+	main_socket.main.ai_family = AF_UNSPEC;
+	main_socket.main.ai_socktype = SOCK_STREAM;
+	getaddrinfo("www.qst0.com", "80", &main_socket.main, &main_socket.reserve);
+	main_socket.sockfd = socket(main_socket.reserve->ai_family,
+	main_socket.reserve->ai_socktype, main_socket.reserve->ai_protocol);
+	connect(main_socket.sockfd, main_socket.reserve->ai_addr,
+	main_socket.reserve->ai_addrlen);
+	send(main_socket.sockfd, main_socket.header, strlen(main_socket.header), 0);
+	main_socket.byte_count = recv(main_socket.sockfd,
+	main_socket.buf, sizeof(main_socket.buf) - 1, 0);
+	main_socket.buf[main_socket.byte_count] = 0;
+	write(fd, main_socket.buf, strlen(main_socket.buf));
+	printf("%s", main_socket.buf);
 }
 
 int		main(void)
